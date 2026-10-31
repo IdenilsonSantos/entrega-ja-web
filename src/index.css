@@ -1,0 +1,216 @@
+/*
+ * Entrega Já · design system (Tailwind CSS v4)
+ *
+ * Camadas:
+ *   1. Tokens primitivos: variáveis CSS em :root, com variação para modo escuro.
+ *   2. Tokens do Tailwind: o bloco @theme inline transforma as variáveis em classes
+ *      (bg-primary, text-ink, rounded-card, shadow-card…). Como as classes apontam para as
+ *      variáveis, o modo escuro troca só as variáveis e nenhum componente precisa de `dark:`.
+ *   3. Base: estilo padrão dos elementos HTML.
+ *   4. Componentes: ficam em src/ds (React), não aqui.
+ *
+ * Para trocar a marca, mude --c-primary e as variações logo abaixo dela.
+ */
+@import 'tailwindcss';
+
+:root {
+  /* marca */
+  --c-primary: #ff7622;
+  --c-primary-press: #ea6514;
+  --c-primary-soft: #ffebe4;
+  --c-primary-tag: #ffe4d3;
+  --c-primary-text: #c2500f; /* laranja para texto sobre fundo claro (contraste AA) */
+  --c-hero: #ffbf6d;
+
+  /* azul-marinho */
+  --c-navy: #181c2e;
+  --c-navy-2: #2a2a39;
+  --c-navy-line: #41414f;
+
+  /* neutros */
+  --c-bg: #ffffff;
+  --c-canvas: #f6f8fa;
+  --c-surface: #ffffff;
+  --c-field: #f0f5fa;
+  --c-hover: #ecf0f4;
+  --c-line: #e8ecf1;
+  --c-ink: #181c2e;
+  --c-text: #32343e;
+  --c-muted: #646982;
+  --c-subtle: #a0a5ba;
+
+  /* estados */
+  --c-success: #037a53;
+  --c-success-soft: #e3f6ee;
+  --c-warn: #9a5b00;
+  --c-warn-soft: #fff3dc;
+  --c-info: #2459c9;
+  --c-info-soft: #e6eefd;
+  --c-danger: #d92d2d;
+  --c-danger-soft: #ffe9e7;
+
+  /* gráficos (checados para contraste e daltonismo) */
+  --c-series-1: #e8620f;
+  --c-series-2: #3d6fd6;
+
+  --sh-card: 0 1px 2px rgb(24 28 46 / 6%), 0 2px 8px rgb(24 28 46 / 5%);
+  --sh-pop: 0 12px 40px rgb(24 28 46 / 16%);
+  --ring: 0 0 0 3px rgb(255 118 34 / 45%);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-primary-soft: #3a2418;
+    --c-primary-tag: #3d2618;
+    --c-primary-text: #ff9a5c;
+    --c-navy: #232338;
+    --c-navy-2: #2c2c44;
+    --c-bg: #121223;
+    --c-canvas: #0d0d1a;
+    --c-surface: #1b1b2d;
+    --c-field: #26263a;
+    --c-hover: #2a2a3e;
+    --c-line: #303046;
+    --c-ink: #f4f5f8;
+    --c-text: #d9dbe4;
+    --c-muted: #a8acc0;
+    --c-subtle: #7c8099;
+    --c-success: #4fd1a1;
+    --c-success-soft: #12332a;
+    --c-warn: #f2b24c;
+    --c-warn-soft: #3a2c12;
+    --c-info: #8fb0ff;
+    --c-info-soft: #1a2547;
+    --c-danger: #ff7a70;
+    --c-danger-soft: #3d1a1a;
+    --c-series-2: #4f7be0;
+    --sh-card: 0 4px 20px rgb(0 0 0 / 30%);
+    --sh-pop: 0 12px 40px rgb(0 0 0 / 50%);
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --font-sans: 'Sen', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --color-primary: var(--c-primary);
+  --color-primary-press: var(--c-primary-press);
+  --color-primary-soft: var(--c-primary-soft);
+  --color-primary-tag: var(--c-primary-tag);
+  --color-primary-text: var(--c-primary-text);
+  --color-hero: var(--c-hero);
+  --color-navy: var(--c-navy);
+  --color-navy-2: var(--c-navy-2);
+  --color-navy-line: var(--c-navy-line);
+  --color-bg: var(--c-bg);
+  --color-canvas: var(--c-canvas);
+  --color-surface: var(--c-surface);
+  --color-field: var(--c-field);
+  --color-hover: var(--c-hover);
+  --color-line: var(--c-line);
+  --color-ink: var(--c-ink);
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-subtle: var(--c-subtle);
+  --color-success: var(--c-success);
+  --color-success-soft: var(--c-success-soft);
+  --color-warn: var(--c-warn);
+  --color-warn-soft: var(--c-warn-soft);
+  --color-info: var(--c-info);
+  --color-info-soft: var(--c-info-soft);
+  --color-danger: var(--c-danger);
+  --color-danger-soft: var(--c-danger-soft);
+  --color-series-1: var(--c-series-1);
+  --color-series-2: var(--c-series-2);
+
+  /* hierarquia de cantos: etiqueta < controle < mídia/cartão < painel que sobe */
+  --radius-sm: 6px;
+  --radius-field: 10px;
+  --radius-btn: 10px;
+  --radius-card: 14px;
+  --radius-panel: 18px;
+
+  --shadow-card: var(--sh-card);
+  --shadow-pop: var(--sh-pop);
+  --shadow-ring: var(--ring);
+
+  --spacing-tap: 44px;
+  --spacing-field: 52px;
+  --spacing-cta: 56px;
+
+  --animate-fade: fade 0.18s ease;
+  --animate-rise: rise 0.24s ease;
+  --animate-slide-in: slide-in 0.24s ease;
+  --animate-shimmer: shimmer 1.2s infinite linear;
+  --animate-ping-soft: ping-soft 1.8s infinite;
+  --animate-shake: shake 0.4s ease;
+
+  @keyframes fade { from { opacity: 0; } }
+  @keyframes rise { from { transform: translateY(24px); opacity: 0; } }
+  @keyframes slide-in { from { transform: translateX(32px); opacity: 0; } }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+  @keyframes ping-soft { 0% { box-shadow: 0 0 0 0 currentColor; } 70%, 100% { box-shadow: 0 0 0 7px transparent; } }
+  @keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply min-h-dvh bg-bg font-sans text-[15px] leading-normal text-text antialiased; }
+  h1, h2, h3, h4 { @apply font-bold tracking-[-0.01em] text-ink; }
+  h1 { @apply text-[26px] leading-tight; }
+  h2 { @apply text-xl leading-tight; }
+  h3 { @apply text-[17px] leading-snug; }
+  h4 { @apply text-[15px]; }
+  a { @apply text-primary-text; }
+  button { @apply cursor-pointer; }
+  button:disabled { @apply cursor-not-allowed; }
+  :where(button, a, summary, [tabindex], input[type='checkbox'], input[type='radio']):focus-visible { @apply shadow-ring outline-none; }
+  ::selection { @apply bg-primary-tag; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* placeholder de carregamento */
+@utility bg-shimmer {
+  background: linear-gradient(90deg, var(--c-field) 25%, var(--c-hover) 50%, var(--c-field) 75%);
+  background-size: 200% 100%;
+}
+
+
+/* cabeçalho escuro do login com raios e arco tracejado */
+@utility auth-decor {
+  position: relative;
+  overflow: hidden;
+  &::before, &::after { content: ''; position: absolute; pointer-events: none; border-radius: 50%; }
+  &::before {
+    width: 280px; height: 280px; left: -140px; top: -140px;
+    background: repeating-conic-gradient(from 0deg, rgb(255 255 255 / 7%) 0 2deg, transparent 2deg 9deg);
+    mask: radial-gradient(circle, transparent 30%, #000 31%);
+  }
+  &::after { width: 240px; height: 240px; right: -120px; top: -50px; border: 2px dashed rgb(255 118 34 / 35%); }
+}
+
+/* Rota no mapa: linha base + um brilho que percorre o caminho até o destino (como no Uber) */
+.route-pulse {
+  stroke-dasharray: 70 700;
+  animation: route-pulse 2.4s linear infinite;
+}
+@keyframes route-pulse {
+  from { stroke-dashoffset: 770; }
+  to { stroke-dashoffset: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-pulse { animation: none; stroke-dasharray: none; opacity: 0; }
+}
+
+/* Leaflet */
+.leaflet-container { font-family: inherit; background: var(--c-field); }
+.leaflet-container .leaflet-control-attribution { font-size: 10px; }
