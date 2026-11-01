@@ -56,3 +56,27 @@ export const ROLE: Record<Role, string> = { CUSTOMER: 'Cliente', COURIER: 'Entre
 
 export const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 export const phoneLink = (p?: string | null) => (p ? `tel:${p.replace(/[^\d+]/g, '')}` : undefined);
+
+export const WEEKDAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const sameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+/** "hoje às 18:00", "amanhã às 11:00", "sáb. às 11:00" */
+function when(iso: string) {
+  const d = new Date(iso);
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const day = sameDay(d, new Date()) ? 'hoje' : sameDay(d, tomorrow) ? 'amanhã' : d.toLocaleDateString('pt-BR', { weekday: 'short' });
+  return `${day} às ${time(iso)}`;
+}
+/** Situação da loja numa frase: "Abre hoje às 18:00", "Aberta até 23:30", "Fechada" */
+export function openLabel(s: { openNow: boolean; opensAt: string | null; closesAt: string | null }) {
+  if (s.openNow) return s.closesAt ? `Aberta até ${time(s.closesAt)}` : 'Aberta';
+  return s.opensAt ? `Abre ${when(s.opensAt)}` : 'Fechada';
+}
+/** Horário da semana por dia, de segunda a domingo: [["Segunda", "11:00–15:00, 18:00–23:00"], ["Terça", "Fechado"]…] */
+export function weekHours(ranges: { day: number; open: string; close: string }[]) {
+  return [1, 2, 3, 4, 5, 6, 0].map((day) => {
+    const list = ranges.filter((r) => r.day === day).sort((a, b) => a.open.localeCompare(b.open));
+    const text = list.map((r) => (r.open === '00:00' && r.close === '00:00' ? '24 horas' : `${r.open}–${r.close}`)).join(', ');
+    return [WEEKDAYS[day], text || 'Fechado'] as const;
+  });
+}

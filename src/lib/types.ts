@@ -47,6 +47,8 @@ export interface MyStore {
   status: StoreStatus;
   statusReason: string | null;
   isOpen: boolean;
+  /** botão ligado e dentro do horário */
+  openNow: boolean;
   role: StoreRole;
   permissions: StorePermission[];
 }
@@ -75,10 +77,25 @@ export interface Store {
   minOrderCents: number;
   prepTimeMin: number;
   deliveryRadiusKm: number;
+  /** Na vitrine é igual a openNow; no painel é o botão de abrir e fechar */
   isOpen: boolean;
+  /** Recebe pedidos agora (botão ligado e dentro do horário) */
+  openNow: boolean;
+  /** Fechada pelo horário: quando abre */
+  opensAt: string | null;
+  /** Aberta pelo horário: quando fecha */
+  closesAt: string | null;
+  openingHours: OpeningRange[] | null;
   ratingAvg: number;
   ratingCount: number;
   distanceKm?: number;
+}
+
+/** Faixa do horário de funcionamento: dia 0 = domingo, horas "HH:MM" no fuso da loja */
+export interface OpeningRange {
+  day: number;
+  open: string;
+  close: string;
 }
 
 export interface ProductOption {
@@ -126,6 +143,7 @@ export interface MerchantStore extends Store {
   phone: string | null;
   autoAccept: boolean;
   autoReady: boolean;
+  timezone: string;
   status: StoreStatus;
   statusReason: string | null;
   myRole: StoreRole;

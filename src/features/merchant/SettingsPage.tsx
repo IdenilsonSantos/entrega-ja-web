@@ -2,6 +2,7 @@ import { Card, ImagePicker, PageHeader, Switch, useToast } from '../../ds';
 import { api } from '../../lib/api';
 import { queryClient } from '../../lib/query';
 import type { MerchantStore } from '../../lib/types';
+import { OpeningHoursEditor } from './OpeningHoursEditor';
 import { StoreForm } from './StoreForm';
 import { storeKey, useStore } from './storeContext';
 
@@ -37,6 +38,10 @@ export function SettingsPage() {
           </div>
         </div>
         <p className="mt-9 text-[13px] text-muted">A capa aparece no topo da página da loja; o logo, na lista de lojas e nos pedidos.</p>
+      </section>
+      <section className="mb-8 grid gap-3">
+        <h2 className="text-lg">Horário de funcionamento</h2>
+        <OpeningHoursEditor store={store} />
       </section>
       <section className="mb-8 grid gap-3">
         <h2 className="text-lg">Automação</h2>

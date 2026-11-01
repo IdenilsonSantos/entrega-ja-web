@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Alert, Button, EmptyState, IconButton, PageLoader, Rating, Thumb, VirtualList, cn, useConfirm, useToast, type VirtualListHandle } from '../../ds';
 import { api } from '../../lib/api';
 import { useAuth } from '../../lib/auth';
-import { money } from '../../lib/format';
+import { money, openLabel, weekHours } from '../../lib/format';
 import type { Product, StoreDetail } from '../../lib/types';
 import { ReportDialog } from '../shared/ReportDialog';
 import { unitPrice, useCart } from './cart';
@@ -157,10 +157,25 @@ export function StorePage() {
           </span>
           {s.minOrderCents > 0 && <span>Pedido mínimo {money(s.minOrderCents)}</span>}
         </div>
-        {!s.isOpen && (
+        {!s.openNow && (
           <Alert tone="warn" className="mt-4">
-            A loja está fechada agora. Você pode ver o cardápio, mas não dá para pedir.
+            {s.opensAt ? `A loja está fechada agora e ${openLabel(s).toLowerCase()}.` : 'A loja está fechada agora.'} Você pode ver o cardápio, mas não dá para pedir.
           </Alert>
+        )}
+        {s.openingHours && (
+          <details className="mt-3 max-w-sm text-sm">
+            <summary className="cursor-pointer font-bold text-ink">
+              Horários{s.openNow && s.closesAt && <span className="font-normal text-muted"> · {openLabel(s)}</span>}
+            </summary>
+            <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1">
+              {weekHours(s.openingHours).map(([day, text]) => (
+                <div key={day} className="contents">
+                  <dt className="text-muted">{day}</dt>
+                  <dd className={text === 'Fechado' ? 'text-muted' : 'text-text'}>{text}</dd>
+                </div>
+              ))}
+            </dl>
+          </details>
         )}
 
         <Menu sections={s.sections} onOpen={setOpen} />
@@ -178,7 +193,7 @@ export function StorePage() {
         </div>
       )}
 
-      <ProductDialog product={open} open={!!open} onClose={() => setOpen(null)} disabled={s.isOpen ? null : 'Loja fechada'} onAdd={(c, q, n) => open && add(open, c, q, n)} />
+      <ProductDialog product={open} open={!!open} onClose={() => setOpen(null)} disabled={s.openNow ? null : 'Loja fechada'} onAdd={(c, q, n) => open && add(open, c, q, n)} />
       <ReportDialog open={reporting} onClose={() => setReporting(false)} target={{ type: 'STORE', id: s.id, name: s.name }} />
     </div>
   );

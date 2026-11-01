@@ -30,7 +30,7 @@ export function StoresHome() {
                   <strong className="text-ink">{s.name}</strong>
                   <span className="text-sm text-muted">Você é {STORE_ROLE[s.role].toLowerCase()}</span>
                 </div>
-                {s.status !== 'ACTIVE' ? <Badge tone={STORE_STATUS[s.status].tone}>{STORE_STATUS[s.status].label}</Badge> : <Badge tone={s.isOpen ? 'success' : 'neutral'}>{s.isOpen ? 'Aberta' : 'Fechada'}</Badge>}
+                {s.status !== 'ACTIVE' ? <Badge tone={STORE_STATUS[s.status].tone}>{STORE_STATUS[s.status].label}</Badge> : <Badge tone={s.openNow ? 'success' : 'neutral'}>{s.openNow ? 'Aberta' : s.isOpen ? 'Fora do horário' : 'Fechada'}</Badge>}
               </Link>
           )}
         />

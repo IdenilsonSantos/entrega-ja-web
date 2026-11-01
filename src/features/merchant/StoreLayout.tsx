@@ -4,6 +4,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { Alert, PageLoader, Select, cn, useToast } from '../../ds';
 import { api } from '../../lib/api';
 import { useAuth } from '../../lib/auth';
+import { openLabel } from '../../lib/format';
 import { queryClient } from '../../lib/query';
 import type { MerchantStore } from '../../lib/types';
 import { PanelShell, type NavItem } from '../shared/Shell';
@@ -17,7 +18,9 @@ function OpenToggle({ store }: { store: MerchantStore }) {
     setBusy(true);
     try {
       const r = await api.post<{ isOpen: boolean }>(`/merchant/stores/${store.id}/open`, { isOpen: !store.isOpen });
-      queryClient.setQueryData<MerchantStore>(storeKey(store.id), (s) => s && { ...s, isOpen: r.isOpen });
+      queryClient.setQueryData<MerchantStore>(storeKey(store.id), (s) => s && { ...s, isOpen: r.isOpen, openNow: r.isOpen && !store.openingHours?.length });
+      // com horário, quem sabe se está dentro dele é a API
+      queryClient.invalidateQueries({ queryKey: storeKey(store.id) });
       queryClient.invalidateQueries({ queryKey: ['me'] });
     } catch (e) {
       toast.error((e as Error).message);
@@ -25,16 +28,25 @@ function OpenToggle({ store }: { store: MerchantStore }) {
       setBusy(false);
     }
   };
+  const hasHours = !!store.openingHours?.length;
+  // ligado, mas fora do horário: abre sozinha na hora certa
+  const waiting = store.isOpen && !store.openNow;
+  const label = !store.isOpen ? (hasHours ? 'Pausada' : 'Fechada') : waiting ? 'Fora do horário' : 'Aberta';
+  const title = !store.isOpen ? 'Clique para abrir' : hasHours ? `${openLabel(store)}. Clique para pausar` : 'Clique para fechar';
   return (
     <button
       type="button"
       onClick={toggle}
       disabled={busy}
       aria-pressed={store.isOpen}
-      className={cn('inline-flex h-10 items-center gap-2 rounded-btn border-[1.5px] px-3 text-sm font-bold whitespace-nowrap transition', store.isOpen ? 'border-success bg-success-soft text-success' : 'border-line bg-surface text-muted hover:border-subtle')}
+      title={title}
+      className={cn(
+        'inline-flex h-10 items-center gap-2 rounded-btn border-[1.5px] px-3 text-sm font-bold whitespace-nowrap transition',
+        !store.isOpen ? 'border-line bg-surface text-muted hover:border-subtle' : waiting ? 'border-warn bg-warn-soft text-warn' : 'border-success bg-success-soft text-success',
+      )}
     >
-      <span className={cn('size-2.5 rounded-full', store.isOpen ? 'bg-success' : 'bg-subtle')} aria-hidden />
-      {store.isOpen ? 'Aberta' : 'Fechada'}
+      <span className={cn('size-2.5 rounded-full', !store.isOpen ? 'bg-subtle' : waiting ? 'bg-warn' : 'bg-success')} aria-hidden />
+      {label}
     </button>
   );
 }
