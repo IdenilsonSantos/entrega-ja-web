@@ -44,7 +44,12 @@ export function LoginPage() {
       <form onSubmit={submit} className="grid gap-5">
         {error && <Alert tone="danger">{error}</Alert>}
         <Field label="E-mail">{(p) => <Input {...p} type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@exemplo.com" />}</Field>
-        <Field label="Senha">{(p) => <Input {...p} type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />}</Field>
+        <div className="grid gap-1.5">
+          <Field label="Senha">{(p) => <Input {...p} type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />}</Field>
+          <Link to={`/esqueci-senha${email ? `?email=${encodeURIComponent(email)}` : ''}`} className="justify-self-end text-sm">
+            Esqueci minha senha
+          </Link>
+        </div>
         <Button type="submit" size="lg" full loading={busy}>
           Entrar
         </Button>
